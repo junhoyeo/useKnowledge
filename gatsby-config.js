@@ -1,6 +1,6 @@
-const cosmiconfig = require('cosmiconfig');
-const explorer = cosmiconfig('oversomething');
-const { config: { siteMetadata, ...config }, isEmpty } = explorer.searchSync(__dirname);
+const { cosmiconfigSync } = require('cosmiconfig');
+const explorer = cosmiconfigSync('oversomething');
+const { config: { siteMetadata, ...config }, isEmpty } = explorer.search(__dirname);
 
 if (isEmpty) throw new Error('Can\'t find site configuration');
 
