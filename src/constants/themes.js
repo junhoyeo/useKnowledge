@@ -20,6 +20,7 @@ const oneDark = new Theme('#282C34', '#979FAD', '#2979FF', '#56B6C2');
 const oneLight = new Theme('#FAFAFA', '#232324', '#2979FF', '#0184BC');
 const solarizedDark = new Theme('#002B36', '#839496', '#D33682', '#268BD2');
 const solarizedLight = new Theme('#FDF6E3', '#586E75', '#D33682', '#268BD2');
+const juno = new Theme('#292D3E', '#D3DAE3', '#66a6ff', '#89f7fe');
 
 export default {
   oceanic,
@@ -34,7 +35,8 @@ export default {
   oneDark,
   oneLight,
   solarizedDark,
-  solarizedLight
+  solarizedLight,
+  juno,
 };
 
 export function pickColor(kind) {

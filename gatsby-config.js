@@ -57,8 +57,8 @@ module.exports = {
         name: siteMetadata.title,
         description: siteMetadata.description,
         start_url: '/',
-        background_color: '#212121',
-        theme_color: '#FF9800',
+        background_color: '#292D3E',
+        theme_color: '#66a6ff',
         display: 'minimal-ui',
         [config.useIcon && 'icon']: 'content/assets/icon.ico'
       },
