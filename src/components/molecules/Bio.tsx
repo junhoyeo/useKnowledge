@@ -12,7 +12,7 @@ import useConstant from 'utils/useConstant';
 import { rhythm } from 'utils/typography'
 
 export default function Bio() {
-  const { file: { childImageSharp: { fixed: profileImage } } } = useStaticQuery(graphql`    
+  const { file: { childImageSharp: { fixed: profileImage } } } = useStaticQuery(graphql`
     query ProfileImage {
       file(absolutePath: { regex: "/profile.jpg/" }) {
         childImageSharp {
