@@ -7,6 +7,7 @@ if (isEmpty) throw new Error('Can\'t find site configuration');
 module.exports = {
   siteMetadata,
   plugins: [
+    'gatsby-plugin-typescript',
     {
       resolve: 'gatsby-source-filesystem',
       options: {
