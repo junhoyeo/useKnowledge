@@ -56,21 +56,39 @@ print(type(foo))
 - 암묵적 타입 변환(implicit coercion) 기능으로 인해 잘못 넣은 타입에 대해 경고가 나오지 않고, 이를 올바른 타입으로 변환하려고 시도하게 됩니다.
 - 몇몇 인터페이스를 변경되었을 때, 이에 의존적인 다른 코드들을 발견하지 못해, 의도한 대로 동작하지 않습니다.
 
-타입 레벨 프로그래밍이란
+**타입 레벨 프로그래밍(Type-level programming)**이란, 프로그램을 실행하기 전에 타입이 올바른지 검사하는 정적 타이핑을 통해 런타임에 발생하는 오류를 미연에 방지할 수 있는 프로그래밍 패러다임입니다.
 
-이를 위해 우리는 **타입스크립트(TypeScript)**를 사용합니다. 타입스크립트는 컴파일 시간에 타입 검사를 통해 안정성을 확보하는 스크립트 언어입니다.
-이번 글에서는 타입 레벨 프로그래밍에 존재하는 개념인 **변성(Variance)**에 대해서 알아볼 겁니다.
+이를 자바스크립트에 도입하기 위해 **타입스크립트(TypeScript)**를 사용합니다. 타입스크립트는 컴파일 시간에 타입 검사를 통해 안정성을 확보합니다.
+
+이번 글에서는 타입 레벨 프로그래밍에 존재하는 개념인 **변성(Variance)**에 대해서 알아볼 겁니다. 강력한 타입 시스템을 지닌 함수형 프로그래밍 언어인 하스켈을 사용해 설명하는 글은 간간히 존재하지만, 타입스크립트를 사용하는 글은 잘 보이지 않아서 쓰게 되었답니다.
 
 > [overcurried](https://overcurried.netlify.com/) 블로그를 운영하고 계신 [서재원(ENvironmentSet)](https://github.com/ENvironmentSet) 님께서 추천해 주신 주제입니다. 글을 작성하고 필요한 개념을 공부하는데도 재원님께 정말 많은 도움을 받았습니다.
 
-변성을 이해하기 위해서는 먼저 타입 생성자(Type Constructor)에 대해서 알아봐야 한다.
-타입 생성자란 무엇일까
-클래스에 있는 생성자(constructor) 함수는 알고 있지
-메소드는 아니고 함수라메
+## 타입 생성자
+변성을 이해하기 위해서는 먼저 **타입 생성자(Type Constructor)**에 대해서 알아봐야 합니다.
 
-그건 class 내에서 객체를 생성하고 초기화하기 위한 함수잖아
-이건 값 생성자(데이터 생성자라고도 하는 듯)에 속해
-값 생성자는 어떤 타입의 값을 받아서, 그 값의 객체를 생성하잖아
+자바스크립트 클래스에 있는 **생성자(constructor)** 함수를 보신 적 있나요?
+생성자 함수는 `class` 내에서 객체를 생성하고, 초기화하기 위한 함수입니다.
+
+```typescript
+class Cat {
+  public age: number;
+  public color: string;
+  public cutiness: number;
+
+  constructor(age: number, color: string, cutiness: number) {
+    this.age = age;
+    this.color = color;
+    this.cutiness = cutiness;
+  }
+}
+
+const cat = new Cat(3, 'orange', 100);
+```
+
+클래스의 생성자는 **값 생성자(Value Constructor)**에 속합니다. 값 생성자는 어떤 타입의 값을 받아서, 그 값을 이용하는 객체를 생성하지요.
+
+예를 들어, 위 코드에서 클래스 `Cat`의 생성자는 `number` 타입의 `age`, `string` 타입의 `color`, `number` 타입의 `cutiness`를 인수로 받고 새로운 객체 `Cat`을 반환합니다.
 
 타입 생성자는 타입을 받아서 그거에 대한 새로운 타입을 만들어
 https://stackoverflow.com/questions/39614311/class-constructor-type-in-typescript
