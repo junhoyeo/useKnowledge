@@ -5,6 +5,10 @@ description: 타입 레벨 프로그래밍에 있는 개념인 변성-공변성,
 somethings: 3
 ---
 
+![pikachu](../../assets/pikachu.png)
+
+> 피카피!
+
 ## 타입 레벨 프로그래밍이란?
 대부분의 사람들이 C언어로 프로그래밍을 처음 접합니다.
 제일 먼저 `Hello World!`를 콘솔 화면에 출력한 다음에는 대게 변수를 선언하고, 사용하는 법을 배우죠.
@@ -95,7 +99,7 @@ const cat = new Cat(3, 'orange', 100);
 타입스크립트에서는 보통 이를 **제네릭(Generic)**으로 구현합니다.
 
 ## 제네릭
-제네릭은 어떤 클래스나 함수 내부에서 사용하는 데이터의 타입을 외부에서 지정하는 것을 말합니다.
+제네릭은 어떤 클래스나 함수 **내부에서 사용하는 데이터의 타입을 외부에서 지정하는 것**을 말합니다.
 
 ```typescript
 class Store {
@@ -113,6 +117,7 @@ class Store {
 }
 ```
 
+제네릭을 설명하기 위해 먼저 간단한 `Storage` 클래스를 구현해 봤습니다. `localStorage`나 `sessionStorage`처럼 `setItem`에서 주어진 `key`에 데이터(`number` 타입의 숫자)를 대응시켜 저장하고, `getItem`이 호출될 때 `key`의 데이터를 반환합니다.
 
 ```typescript
 const store = new Store();
@@ -121,6 +126,8 @@ store.setItem('flag', 1);
 store.getItem('flag'); // 1
 ```
 
+위와 같은 방식으로 사용되는 것이죠.
+
 ```typescript
 const storeForString = new Store();
 
@@ -128,11 +135,15 @@ storeForString.setItem('flag', 'hello');
 // Argument of type '"hello"' is not assignable to parameter of type 'number'.(2345)
 ```
 
+하지만 `number`가 아닌, `string` 타입의 데이터를 저장하는 새로운 객체가 필요하게 된다면 위의 구조를 재활용할 수 없습니다. 위의 `Store`는 `number`만을 다루기 때문이죠.
+
 ```typescript
 class Store {...}
 
 class StoreForString {...}
 ```
+
+그렇다고 같은 코드의 구조를 타입만 바꿔서 다시 만들어야 할까요? **중복 배제 원칙(DRY, Don't Repeat Yourself)**에 맞지 않아 낭비처럼 느껴집니다.
 
 ```typescript
 class Store<T> {
@@ -153,10 +164,18 @@ const storeForNumber = new Store<number>();
 const storeForString = new Store<string>();
 ```
 
+이럴 때 제네릭을 사용하면, 구조에서 사용할 타입을 용도에 맞게 지정하여 사용할 수 있게 됩니다.
+
+위 코드에서 **타입 변수(Type variable)**인 `T`를 이용해 제네릭 클래스 `Store`를 만들었습니다. 이로 인해 `setItem` 메소드는 `T` 타입의 인수 `item`을 받게 되고, `getItem` 메소드는 `T` 타입의 값을 반환하게 됩니다.
+
+`Store<number>`에서는 `number`를, `Store<string>`에서는 `string`을 `T`에 대입했습니다.
+
 ```typescript
 const animals: string[] = ['bear', 'cat', 'dog'];
 const animals: Array<string> = ['bear', 'cat', 'dog'];
 ```
+
+다른 예시를 알아보겠습니다. 타입스크립트에서는 위에 있는 두 방식대로 배열을 초기화할 수 있는데요.
 
 ```typescript
 const arrayForNumber = Array<number>();
@@ -170,9 +189,7 @@ arrayForString.push(1);
 // Argument of type '1' is not assignable to parameter of type 'string'.(2345)
 ```
 
-예를 들어서 Array는 타입 생성자야
-
-타입 A를 받아서 Array<A>를 주잖아
+이때 `Array` 역시 타입 생성자라고 할 수 있습니다. 타입 `A`를 받아서 `Array<A>`를 반환하기 때문이죠.
 
 그럼 이제 변성이 뭔지 살펴보자
 변성은 타입 생성자와 타입 인수(type parameter)의 관계를 말해
@@ -204,7 +221,7 @@ Either a (Int, Bool)
 - 공변성(covariant)
 - 반공변성(contravariant)
 - 무공변성(invariant)
-- bivariance: 근데 이건 안쓰임
+- 이변성(bivariance): 근데 이건 TS에선 안써.
 
 위에서 말한 세 개의 표준형 타입들에 존재하는 타입은 위치를 가짐
 실행을 위임 postitive(+), 실행하기 위해 받는 negative(-).
