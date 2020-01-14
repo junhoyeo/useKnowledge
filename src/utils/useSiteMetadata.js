@@ -11,7 +11,7 @@ export default function useSiteMetadata() {
           siteUrl
           social {
             github
-            twitter
+            facebook
           }
           something
           theme
