@@ -86,16 +86,89 @@ class Cat {
 const cat = new Cat(3, 'orange', 100);
 ```
 
-클래스의 생성자는 **값 생성자(Value Constructor)**에 속합니다. 값 생성자는 어떤 타입의 값을 받아서, 그 값을 이용하는 객체를 생성하지요.
+클래스의 생성자는 **값 생성자(Value Constructor)**에 속합니다. 값 생성자는 어떤 타입의 값을 받아서, 그 값을 이용하는 객체를 생성합니다.
 
 예를 들어, 위 코드에서 클래스 `Cat`의 생성자는 `number` 타입의 `age`, `string` 타입의 `color`, `number` 타입의 `cutiness`를 인수로 받고 새로운 객체 `Cat`을 반환합니다.
 
-타입 생성자는 타입을 받아서 그거에 대한 새로운 타입을 만들어
-https://stackoverflow.com/questions/39614311/class-constructor-type-in-typescript
+타입 생성자 역시 값 생성자와 동작이 같습니다. 타입을 받아서 이에 대한 새로운 타입을 만들어 반환하는 것이죠.
 
-타입스크립트에서는 제네릭이라는 걸로 구현하지
+타입스크립트에서는 보통 이를 **제네릭(Generic)**으로 구현합니다.
 
-- 제네릭 설명
+## 제네릭
+제네릭은 어떤 클래스나 함수 내부에서 사용하는 데이터의 타입을 외부에서 지정하는 것을 말합니다.
+
+```typescript
+class Store {
+  private data: {
+    [key: string]: number;
+  } = {};
+
+  public setItem(key: string, item: number): void {
+    this.data[key] = item;
+  }
+
+  public getItem(key: string): number {
+    return this.data[key];
+  }
+}
+```
+
+
+```typescript
+const store = new Store();
+
+store.setItem('flag', 1);
+store.getItem('flag'); // 1
+```
+
+```typescript
+const storeForString = new Store();
+
+storeForString.setItem('flag', 'hello');
+// Argument of type '"hello"' is not assignable to parameter of type 'number'.(2345)
+```
+
+```typescript
+class Store {...}
+
+class StoreForString {...}
+```
+
+```typescript
+class Store<T> {
+  private data: {
+    [key: string]: T;
+  } = {};
+
+  public setItem(key: string, item: T): void {
+    this.data[key] = item;
+  }
+
+  public getItem(key: string): T {
+    return this.data[key];
+  }
+}
+
+const storeForNumber = new Store<number>();
+const storeForString = new Store<string>();
+```
+
+```typescript
+const animals: string[] = ['bear', 'cat', 'dog'];
+const animals: Array<string> = ['bear', 'cat', 'dog'];
+```
+
+```typescript
+const arrayForNumber = Array<number>();
+arrayForNumber.push(1);
+arrayForNumber.push('str');
+// Argument of type '"str"' is not assignable to parameter of type 'number'.(2345)
+
+const arrayForString = Array<string>();
+arrayForString.push('str');
+arrayForString.push(1);
+// Argument of type '1' is not assignable to parameter of type 'string'.(2345)
+```
 
 예를 들어서 Array는 타입 생성자야
 
