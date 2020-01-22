@@ -191,28 +191,83 @@ arrayForString.push(1);
 
 이때 `Array` 역시 타입 생성자라고 할 수 있습니다. 타입 `A`를 받아서 `Array<A>`를 반환하기 때문이죠.
 
-그럼 이제 변성이 뭔지 살펴보자
-변성은 타입 생성자와 타입 인수(type parameter)의 관계를 말해
+## 변성의 정의
+그럼 이제 변성이 뭔지 살펴보겠습니다.
 
+변성은 타입 생성자와 **타입 인수(type parameter)**의 관계를 통해 정의됩니다. 위에서 다룬 예시에서 타입 인수는 `A`가 되겠죠.
+
+```
 Array<A> is convariant with respect to A.
+```
 
-이런 식으로 써
+`Array<A>`와 `A`의 관계는 이렇게 표현할 수 있습니다.
 
-convariant가 뭐냐고?
-변성에는 종류가 세 가지 있어
-그전에 ADT에 대해서 알아보자
+`convariant`가 무엇인지 궁금하다고요? 변성에는 네 가지 종류가 있는데, 그 중 하나랍니다. 그 전에, 먼저 살펴봐야 할 것이 ~~진짜 마지막으로~~ 있습니다.
 
-ADT는 algebraic data type을 말해
-tagged union 같은 게 해당된다던데 그건 모르겠어
+## ADT
+**대수적 자료형(ADT, Algebraic Data Type)**은 복합 데이터 형식(Composite data type)의 종류 중 하나로, 다른 타입들을 모아서 형성된 타입을 뜻합니다. ADT라고 해서 추상 데이터 타입(Abstract Data Type)과 헷갈리면 안됩니다!
 
-이것의 기초? 인 Sum of product에서는
-아무튼 여기서는 3개의 타입을 기본으로 표현함
+ADT에는 세 가지 기본 타입이 존재합니다.
 
-- 합 타입(Sum type): Either a b (| 이걸로 나누는 거 있잖아)
-- 곱 타입(Product type): (a, b) (둘 다 맞아야 하는 거)
-- 지수 타입(exponential type): a -> b (함수잖아)
+### 합 타입
+**합 타입(Sum type)**은 타입스크립트에서 `a | b`(OR)로 나타냅니다. 보통 `union`이라고도 부르는 그것입니다.
 
-이걸 조합해서 ADT 상의 모든 타입을 만들 수 있음
+[타입스크립트 공식 문서](https://www.typescriptlang.org/docs/handbook/advanced-types.html#union-types)에도 소개되고 있습니다. 실제 문서에 사용된 예제를 통해 설명해 드리겠습니다.
+
+```typescript
+/**
+ * Takes a string and adds "padding" to the left.
+ * If 'padding' is a string, then 'padding' is appended to the left side.
+ * If 'padding' is a number, then that number of spaces is added to the left side.
+ */
+function padLeft(value: string, padding: any) {
+    if (typeof padding === "number") {
+        return Array(padding + 1).join(" ") + value;
+    }
+    if (typeof padding === "string") {
+        return padding + value;
+    }
+    throw new Error(`Expected string or number, got '${padding}'.`);
+}
+
+padLeft("Hello world", 4); // returns "    Hello world"
+```
+
+위에서 구현한 `padLeft` 함수는 두 가지 인수를 받습니다. `value`와 `padding`인데요. `value`는 padding을 더할 문자열이기 때문에 당연히 `string` 타입입니다.
+
+하지만 문제는 `padding` 인수입니다. `padding`은 `string` 타입과 `number` 타입 둘 다 될 수 있고, 그 타입에 따라 함수의 동작이 다릅니다. `padding: string`으로 타입을 지정해 버리면 `number` 타입이 전달되었을 때 에러가 발생하고, `padding: number`로 두면 그 반대의 문제가 발생하기 때문에 어떤 값이든 될 수 있는 `any` 타입으로 지정한 것 같습니다.
+
+하지만 여기에는 치명적인 문제가 있습니다.
+
+```typescript
+let indentedString = padLeft("Hello world", true); // passes at compile time, fails at runtime.
+```
+
+위처럼 `padding`의 타입이 `string`이나 `number`가 아니더라도 타입 검사를 통과한다는 것입니다.
+
+```typescript
+/**
+ * Takes a string and adds "padding" to the left.
+ * If 'padding' is a string, then 'padding' is appended to the left side.
+ * If 'padding' is a number, then that number of spaces is added to the left side.
+ */
+function padLeft(value: string, padding: string | number) {
+    // ...
+}
+
+let indentedString = padLeft("Hello world", true); // errors during compilation
+```
+
+그래서 유니온 타입을 이용해 `string`과 `number` 두개 맥임.
+
+### 곱 타입
+곱 타입(Product type): `(a, b)`
+
+### 지수 타입
+지수 타입(exponential type): `a -> b`
+
+이들을 조합해서 ADT 상의 모든 타입을 만들 수 있는 것이죠.
+
 약간 이런식으로 ㅇㅇ
 Either a (Int, Bool)
 
