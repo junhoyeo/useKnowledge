@@ -1,5 +1,5 @@
 ---
-title: 포켓몬에도 있다는 변성 알아보기
+title: 포켓몬 타입에는 없는 변성 알아보기
 date: 2020-01-09
 description: 타입 레벨 프로그래밍에 있는 개념인 변성-공변성, 반공변성, 무공변성-에 대해 알아봅시다.
 somethings: 3
@@ -277,6 +277,9 @@ Either a (Int, Bool)
 - 반공변성(contravariant)
 - 무공변성(invariant)
 - 이변성(bivariance): 근데 이건 TS에선 안써.
+
+https://www.schoolofhaskell.com/user/commercial/content/covariance-contravariance
+https://stackoverflow.com/questions/40951370/scalas-position-variance
 
 위에서 말한 세 개의 표준형 타입들에 존재하는 타입은 위치를 가짐
 실행을 위임 postitive(+), 실행하기 위해 받는 negative(-).
